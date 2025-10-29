@@ -3,15 +3,12 @@ import { X } from "lucide-react";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-  // Use your real uploaded images + placeholders for the rest
   const galleryImages = [
-    { image: "/img/gallery1.png", alt: "Team Event 1" },
-    { image: "/img/gallery2.png", alt: "Training Session" },
-    { image: "/img/gallery3.png", alt: "Award Ceremony" },
-    // Fallback placeholders until more real images are added
+    { image: "https://via.placeholder.com/300x300?text=Gallery+1", alt: "Team Event 1" },
+    { image: "https://via.placeholder.com/300x300?text=Gallery+2", alt: "Training Session" },
+    { image: "https://via.placeholder.com/300x300?text=Gallery+3", alt: "Award Ceremony" },
     ...Array.from({ length: 16 }, (_, i) => ({
-      image: `/img/placeholder.webp`,
+      image: `https://via.placeholder.com/300x300?text=Placeholder+${i + 4}`,
       alt: `Gallery placeholder ${i + 4}`,
     })),
   ];
@@ -26,8 +23,6 @@ const Gallery = () => {
           <p className="text-xl text-center text-muted-foreground mb-12">
             Moments that Define Our Journey 🇮🇳
           </p>
-
-          {/* Image Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {galleryImages.map((item, index) => (
               <div
@@ -40,17 +35,12 @@ const Gallery = () => {
                   alt={item.alt}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/img/placeholder.webp";
-                  }}
                 />
               </div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Fullscreen Lightbox View */}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fadeIn"
