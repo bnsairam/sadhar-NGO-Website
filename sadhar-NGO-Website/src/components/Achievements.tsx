@@ -11,11 +11,11 @@ const Achievements = () => {
     [Autoplay({ delay: 3000, stopOnInteraction: true })]
   );
 
-  // Only achievement5, duplicated for visual balance in carousel
-  const achievements = [
-    { image: "/img/achievement5.webp", alt: "Achievement 5" },
-    { image: "/img/achievement5.webp", alt: "Achievement 5" }, // Duplicate for carousel effect
-  ];
+  // Achievements from 1 to 6
+  const achievements = Array.from({ length: 6 }, (_, i) => ({
+    image: `/img/achievement${i + 1}.webp`,
+    alt: `Achievement ${i + 1}`,
+  }));
 
   // Pause carousel on hover
   const handleMouseEnter = () => emblaApi?.plugins()?.autoplay?.stop();
