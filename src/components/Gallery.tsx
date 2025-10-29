@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+<<<<<<< HEAD
   // Use your real uploaded images + placeholders for the rest
   const galleryImages = [
     { image: "/img/gallery1.png", alt: "Team Event 1" },
@@ -13,6 +14,21 @@ const Gallery = () => {
     ...Array.from({ length: 16 }, (_, i) => ({
       image: `/img/placeholder.webp`,
       alt: `Gallery placeholder ${i + 4}`,
+=======
+  // Update this array to match the actual image filenames in your /public/img/ folder
+  const galleryImages = [
+    { image: "/img/gallery1.webp", alt: "Team Event 1" },
+    { image: "/img/gallery2.webp", alt: "Training Session" },
+    { image: "/img/gallery3.webp", alt: "Award Ceremony" },
+    { image: "/img/gallery4.webp", alt: "Gallery Image 4" },
+    { image: "/img/gallery5.webp", alt: "Gallery Image 5" },
+    { image: "/img/gallery6.webp", alt: "Gallery Image 6" },
+    // Add more real images here if available
+    // Fallback placeholders for the rest
+    ...Array.from({ length: 14 }, (_, i) => ({
+      image: `/img/gallery${i + 7}.webp`, // Adjust index as per your files
+      alt: `Gallery placeholder ${i + 7}`,
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
     })),
   ];
 
@@ -26,7 +42,10 @@ const Gallery = () => {
           <p className="text-xl text-center text-muted-foreground mb-12">
             Moments that Define Our Journey 🇮🇳
           </p>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
           {/* Image Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {galleryImages.map((item, index) => (
@@ -41,7 +60,11 @@ const Gallery = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                   onError={(e) => {
+<<<<<<< HEAD
                     (e.target as HTMLImageElement).src = "/img/placeholder.webp";
+=======
+                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/300x300?text=Missing+Image";
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
                   }}
                 />
               </div>
@@ -49,7 +72,10 @@ const Gallery = () => {
           </div>
         </div>
       </section>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
       {/* Fullscreen Lightbox View */}
       {selectedImage && (
         <div

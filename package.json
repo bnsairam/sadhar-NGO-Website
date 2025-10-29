@@ -44,7 +44,10 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
+<<<<<<< HEAD
     "embla-carousel-autoplay": "^8.6.0",
+=======
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
     "input-otp": "^1.4.2",

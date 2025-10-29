@@ -55,6 +55,29 @@ const About = () => {
               teamwork, and discipline.
             </p>
 
+<<<<<<< HEAD
+=======
+            {/* Coach Information */}
+            <section className="mt-8">
+              <h3 className="text-2xl font-bold text-green-700 mb-4">Our Coach</h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                <strong>Name:</strong> Srikanth Palaniswamy
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                <strong>Education:</strong> Master's in Engineering (Printing and Packaging Technology) from College of Engineering Guindy, Anna University (2012)
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                <strong>Coaching Qualification:</strong> Diploma in Sports Coaching (Judo) and Diploma in Sports Performance Analysis from Netaji Subash National Institute of Sports, Patiala (2023-2024)
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                <strong>Experience:</strong> Judo Coach at Sardar Vallabhai Patel Sports Academy since 2012
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                <strong>Achievements:</strong> Coached numerous athletes including M. Sathyavanan, who participated in multiple National and All India University Judo Championships from 2009 to 2022.
+              </p>
+            </section>
+
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
             <p className="text-xl font-bold text-green-700">
               Together, let's continue to <span className="text-orange-600">#ChangeTheScript</span>
             </p>
@@ -81,6 +104,17 @@ const About = () => {
               >
                 Are you an Athlete?
               </Button>
+<<<<<<< HEAD
+=======
+              <Button
+                variant="outline"
+                href="/img/CORPORATION.pdf" // Ensure this path is correct relative to public folder
+                download
+                className="border-purple-600 text-purple-700 hover:bg-purple-600 hover:text-white transition"
+              >
+                Download Coach Profile
+              </Button>
+>>>>>>> 371dca0f5c79213205d1095c303966595160635c
             </div>
           </motion.div>
 
