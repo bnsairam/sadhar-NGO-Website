@@ -12,6 +12,7 @@ const Gallery = () => {
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
+  // Define gallery images with exact paths from public/img/
   const galleryImages: GalleryItem[] = Array.from({ length: 19 }, (_, i) => {
     const num = i + 1;
     return {
@@ -20,6 +21,7 @@ const Gallery = () => {
     };
   });
 
+  // Preload first 4 images for better LCP
   useEffect(() => {
     const preloadImages = galleryImages.slice(0, 4).map((item) =>
       new Promise((resolve) => {
@@ -55,6 +57,31 @@ const Gallery = () => {
 
   return (
     <>
+      <header className="bg-white shadow-md py-4">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <img
+              src="/logo.png" // Replace with your logo path
+              alt="Sardar Vallabhbhai Patel Academy Logo"
+              className="h-10 mr-2"
+            />
+            <div>
+              <h1 className="text-xl font-bold text-blue-900">Sardar Vallabhbhai Patel</h1>
+              <span className="text-sm text-orange-600">ACADEMY</span>
+            </div>
+          </div>
+          <nav className="flex space-x-6">
+            <a href="#home" className="text-blue-800 hover:text-blue-600">HOME</a>
+            <a href="#about" className="text-blue-800 hover:text-blue-600">ABOUT US</a>
+            <a href="#programmes" className="text-blue-800 hover:text-blue-600">PROGRAMMES</a>
+            <a href="#gallery" className="text-blue-800 hover:text-blue-600">GALLERY</a>
+            <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full hover:bg-gradient-to-l">
+              DONATE
+            </button>
+          </nav>
+        </div>
+      </header>
+
       <section
         id="gallery"
         className="section-padding bg-gradient-to-b from-[#fffef0] via-[#f3f3f3] to-[#fff] py-12 sm:py-16"
@@ -62,10 +89,10 @@ const Gallery = () => {
       >
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#1a1a1a] to-[#333] bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
               GALLERY
             </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto">
               Moments that Define Our Journey 🇮🇳
             </p>
           </div>
@@ -87,7 +114,7 @@ const Gallery = () => {
               return (
                 <div
                   key={index}
-                  className="aspect-square overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer relative group"
+                  className="aspect-square overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer relative group bg-gray-50"
                   onClick={() => handleImageClick(item.image)}
                   role="button"
                   tabIndex={0}
