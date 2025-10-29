@@ -3,13 +3,20 @@ import { X } from "lucide-react";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // Update this array to match the actual image filenames in your /public/img/ folder
   const galleryImages = [
-    { image: "https://via.placeholder.com/300x300?text=Gallery+1", alt: "Team Event 1" },
-    { image: "https://via.placeholder.com/300x300?text=Gallery+2", alt: "Training Session" },
-    { image: "https://via.placeholder.com/300x300?text=Gallery+3", alt: "Award Ceremony" },
-    ...Array.from({ length: 16 }, (_, i) => ({
-      image: `https://via.placeholder.com/300x300?text=Placeholder+${i + 4}`,
-      alt: `Gallery placeholder ${i + 4}`,
+    { image: "/img/gallery1.webp", alt: "Team Event 1" },
+    { image: "/img/gallery2.webp", alt: "Training Session" },
+    { image: "/img/gallery3.webp", alt: "Award Ceremony" },
+    { image: "/img/gallery4.webp", alt: "Gallery Image 4" },
+    { image: "/img/gallery5.webp", alt: "Gallery Image 5" },
+    { image: "/img/gallery6.webp", alt: "Gallery Image 6" },
+    // Add more real images here if available
+    // Fallback placeholders for the rest
+    ...Array.from({ length: 14 }, (_, i) => ({
+      image: `/img/gallery${i + 7}.webp`, // Adjust index as per your files
+      alt: `Gallery placeholder ${i + 7}`,
     })),
   ];
 
@@ -23,6 +30,7 @@ const Gallery = () => {
           <p className="text-xl text-center text-muted-foreground mb-12">
             Moments that Define Our Journey 🇮🇳
           </p>
+          {/* Image Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {galleryImages.map((item, index) => (
               <div
@@ -35,12 +43,16 @@ const Gallery = () => {
                   alt={item.alt}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/300x300?text=Missing+Image";
+                  }}
                 />
               </div>
             ))}
           </div>
         </div>
       </section>
+      {/* Fullscreen Lightbox View */}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fadeIn"
