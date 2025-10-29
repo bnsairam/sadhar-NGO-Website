@@ -10,8 +10,8 @@ const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
-  // Define gallery images with exact paths from public/img/
   const galleryImages: GalleryItem[] = Array.from({ length: 19 }, (_, i) => {
     const num = i + 1;
     return {
@@ -20,7 +20,6 @@ const Gallery = () => {
     };
   });
 
-  // Preload first 4 images for better LCP
   useEffect(() => {
     const preloadImages = galleryImages.slice(0, 4).map((item) =>
       new Promise((resolve) => {
@@ -29,7 +28,11 @@ const Gallery = () => {
           setLoadedImages((prev) => new Set(prev).add(item.image));
           resolve(img);
         };
-        img.onerror = () => resolve(img);
+        img.onerror = (e) => {
+          const msg = `Error loading ${item.image}: ${e.type}`;
+          setErrorMessages((prev) => [...prev, msg]);
+          resolve(img);
+        };
         img.src = item.image;
       })
     );
@@ -40,7 +43,9 @@ const Gallery = () => {
     setSelectedImage(image);
   }, []);
 
-  const handleImageError = useCallback((imageSrc: string) => {
+  const handleImageError = useCallback((imageSrc: string, e: React.SyntheticEvent<HTMLImageElement>) => {
+    const msg = `Error loading ${imageSrc}: ${e.type}`;
+    setErrorMessages((prev) => [...prev, msg]);
     setImageErrors((prev) => new Set(prev).add(imageSrc));
   }, []);
 
@@ -64,6 +69,15 @@ const Gallery = () => {
               Moments that Define Our Journey 🇮🇳
             </p>
           </div>
+
+          {/* Debug Error Messages */}
+          {errorMessages.length > 0 && (
+            <div className="mb-4 p-2 bg-red-100 text-red-700 text-sm rounded">
+              {errorMessages.map((msg, idx) => (
+                <p key={idx}>{msg}</p>
+              ))}
+            </div>
+          )}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {galleryImages.map((item, index) => {
@@ -108,7 +122,7 @@ const Gallery = () => {
                     fetchPriority={index < 4 ? "high" : "auto"}
                     decoding="async"
                     onLoad={() => handleImageLoad(item.image)}
-                    onError={() => handleImageError(item.image)}
+                    onError={(e) => handleImageError(item.image, e)}
                   />
                 </div>
               );
