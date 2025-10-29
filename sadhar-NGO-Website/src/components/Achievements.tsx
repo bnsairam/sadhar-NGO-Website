@@ -7,12 +7,12 @@ import { motion } from "framer-motion";
 
 const Achievements = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, align: "center", slidesToScroll: 1 },
-    [Autoplay({ delay: 3000, stopOnInteraction: true })]
+    { loop: false, align: "center", slidesToScroll: 2 },
+    [Autoplay({ delay: 3000, stopOnInteraction: true, stopOnLastSnap: true })]
   );
 
-  // Achievements from 1 to 6
-  const achievements = Array.from({ length: 6 }, (_, i) => ({
+  // Achievements from 1 to 21
+  const achievements = Array.from({ length: 21 }, (_, i) => ({
     image: `/img/achievement${i + 1}.webp`,
     alt: `Achievement ${i + 1}`,
   }));
@@ -80,7 +80,7 @@ const Achievements = () => {
                   <img
                     src={item.image}
                     alt={item.alt}
-                    className="w-full h-64 md:h-80 lg:h-96 object-cover relative z-10"
+                    className="w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover relative z-10"
                     loading="lazy"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "/img/placeholder.webp";
