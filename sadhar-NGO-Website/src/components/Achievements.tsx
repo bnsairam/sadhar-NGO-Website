@@ -7,7 +7,6 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 const Achievements = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [scrollPosition, setScrollPosition] = useState({ top: 0, bottom: 0 });
 
   const achievements = Array.from({ length: 21 }, (_, i) => ({
     image: `/img/achievement${i + 1}.webp`,
@@ -15,25 +14,14 @@ const Achievements = () => {
     id: i + 1,
   }));
 
-  // Split into two rows
-  const topRow = achievements.filter((_, i) => i % 2 === 0);
-  const bottomRow = achievements.filter((_, i) => i % 2 === 1);
+  // Split into two rows - odd and even
+  const topRow = achievements.filter((_, i) => i % 2 === 0); // 0, 2, 4, 6...
+  const bottomRow = achievements.filter((_, i) => i % 2 !== 0); // 1, 3, 5, 7...
 
-  // Auto-scroll effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setScrollPosition((prev) => ({
-        top: (prev.top + 1) % (topRow.length * 400),
-        bottom: (prev.bottom + 1) % (bottomRow.length * 400),
-      }));
-    }, 30);
-    return () => clearInterval(interval);
-  }, [topRow.length, bottomRow.length]);
-
-  const openLightbox = (index, row) => {
-    const fullIndex = row === 'top' ? index * 2 : index * 2 + 1;
-    setCurrentIndex(fullIndex);
-    setSelectedImage(achievements[fullIndex]);
+  const openLightbox = (achievement) => {
+    const index = achievements.findIndex(a => a.id === achievement.id);
+    setCurrentIndex(index);
+    setSelectedImage(achievement);
   };
 
   const closeLightbox = () => setSelectedImage(null);
@@ -45,22 +33,24 @@ const Achievements = () => {
   };
 
   useEffect(() => {
+    if (!selectedImage) return;
+    
     const handleKeyDown = (e) => {
-      if (!selectedImage) return;
       if (e.key === "Escape") closeLightbox();
       if (e.key === "ArrowLeft") navigateLightbox(-1);
       if (e.key === "ArrowRight") navigateLightbox(1);
     };
+    
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImage, currentIndex]);
 
-  const AchievementCard = ({ item, index, row }) => (
+  const AchievementCard = ({ item }) => (
     <motion.div
       className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px] lg:w-[400px] mx-3 cursor-pointer group"
       whileHover={{ scale: 1.02, y: -8 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      onClick={() => openLightbox(index, row)}
+      onClick={() => openLightbox(item)}
     >
       <div className="relative overflow-hidden rounded-3xl shadow-2xl bg-white border border-gray-200/50">
         {/* Indian Flag Tricolor Border Effect on Hover */}
@@ -69,7 +59,7 @@ const Achievements = () => {
         </div>
         
         {/* Indian Flag Animated Border */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#FF9933]" />
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#138808]" />
           <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-b from-[#FF9933] via-white to-[#138808]" />
@@ -92,9 +82,8 @@ const Achievements = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[#FF9933]/20 via-white/10 to-[#138808]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
           {/* Ashoka Chakra icon overlay */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
             <div className="bg-white/95 backdrop-blur-sm rounded-full p-4 shadow-2xl transform scale-90 group-hover:scale-100 transition-transform duration-300">
-              {/* Ashoka Chakra */}
               <svg className="w-10 h-10 text-[#000080] animate-spin-slow" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="2" fill="none" />
                 <circle cx="50" cy="50" r="8" fill="currentColor" />
@@ -122,7 +111,7 @@ const Achievements = () => {
           </div>
           
           {/* Achievement number badge with tricolor */}
-          <div className="absolute top-4 right-4 overflow-hidden rounded-full shadow-lg">
+          <div className="absolute top-4 right-4 overflow-hidden rounded-full shadow-lg z-20">
             <div className="bg-gradient-to-b from-[#FF9933] via-white to-[#138808] px-4 py-2">
               <span className="font-bold text-sm text-gray-900 drop-shadow-sm">#{item.id}</span>
             </div>
@@ -130,10 +119,38 @@ const Achievements = () => {
         </div>
         
         {/* Tricolor shine effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF9933]/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF9933]/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out z-10" />
       </div>
     </motion.div>
   );
+
+  const InfiniteScrollRow = ({ items, direction = "left", delay = 0 }) => {
+    const duplicatedItems = [...items, ...items, ...items]; // Triple for smooth infinite scroll
+    
+    return (
+      <div className="relative overflow-hidden mask-gradient">
+        <motion.div
+          className="flex py-4"
+          animate={{
+            x: direction === "left" ? [0, -items.length * 436] : [-items.length * 436, 0]
+          }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: items.length * 8,
+              ease: "linear",
+              delay: delay
+            }
+          }}
+        >
+          {duplicatedItems.map((item, index) => (
+            <AchievementCard key={`${item.id}-${index}`} item={item} />
+          ))}
+        </motion.div>
+      </div>
+    );
+  };
 
   return (
     <section
@@ -167,44 +184,14 @@ const Achievements = () => {
           </p>
         </motion.div>
 
-        {/* Top Row - Scroll Right */}
-        <div className="relative mb-8 md:mb-12">
-          <div className="overflow-hidden mask-gradient">
-            <motion.div
-              className="flex py-4"
-              animate={{ x: -scrollPosition.top }}
-              transition={{ ease: "linear", duration: 0 }}
-            >
-              {[...topRow, ...topRow].map((item, index) => (
-                <AchievementCard
-                  key={`top-${index}`}
-                  item={item}
-                  index={index % topRow.length}
-                  row="top"
-                />
-              ))}
-            </motion.div>
-          </div>
+        {/* Top Row - Scrolling Left (achievements 1, 3, 5, 7...) */}
+        <div className="mb-8 md:mb-12">
+          <InfiniteScrollRow items={topRow} direction="left" />
         </div>
 
-        {/* Bottom Row - Scroll Left */}
-        <div className="relative">
-          <div className="overflow-hidden mask-gradient">
-            <motion.div
-              className="flex py-4"
-              animate={{ x: scrollPosition.bottom }}
-              transition={{ ease: "linear", duration: 0 }}
-            >
-              {[...bottomRow, ...bottomRow].map((item, index) => (
-                <AchievementCard
-                  key={`bottom-${index}`}
-                  item={item}
-                  index={index % bottomRow.length}
-                  row="bottom"
-                />
-              ))}
-            </motion.div>
-          </div>
+        {/* Bottom Row - Scrolling Right (achievements 2, 4, 6, 8...) */}
+        <div>
+          <InfiniteScrollRow items={bottomRow} direction="right" delay={0} />
         </div>
       </div>
 
@@ -218,7 +205,7 @@ const Achievements = () => {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4"
             onClick={closeLightbox}
           >
-            {/* Close button with tricolor accent */}
+            {/* Close button */}
             <button
               className="absolute top-4 right-4 sm:top-8 sm:right-8 bg-white/10 hover:bg-gradient-to-b hover:from-[#FF9933]/20 hover:via-white/20 hover:to-[#138808]/20 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-50 border border-white/20"
               onClick={closeLightbox}
@@ -247,7 +234,7 @@ const Achievements = () => {
               <ChevronRight className="w-6 h-6" />
             </button>
 
-            {/* Image container with tricolor border */}
+            {/* Image container */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -267,7 +254,7 @@ const Achievements = () => {
                     }}
                   />
                   
-                  {/* Image info overlay with tricolor accent */}
+                  {/* Image info overlay */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-6">
                     <div className="flex items-center gap-3">
                       <div className="w-1 h-12 bg-gradient-to-b from-[#FF9933] via-white to-[#138808] rounded-full" />
