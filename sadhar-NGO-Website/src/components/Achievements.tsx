@@ -1,86 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import { motion } from "framer-motion";
 
 const Achievements = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [emblaRef] = useEmblaCarousel({ loop: true, align: "center" }, [
+    Autoplay({ delay: 2500 }),
+  ]);
 
-  // Generate 21 images dynamically
+  // Add all your images here
   const achievements = Array.from({ length: 21 }, (_, i) => ({
     image: `/img/achievement${i + 1}.webp`,
     alt: `Achievement ${i + 1}`,
   }));
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % achievements.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [achievements.length]);
-
   return (
     <section
       id="achievements"
-      className="relative py-20 bg-gradient-to-b from-orange-50 via-white to-green-50 overflow-hidden"
+      className="py-20 bg-gradient-to-b from-[#fffef0] via-[#f3f3f3] to-[#fff]"
     >
-      {/* Tricolor Border Accent */}
-      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
-
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+      <div className="container mx-auto px-4 text-center">
         <motion.h2
-          initial={{ opacity: 0, y: -40 }}
+          initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-gray-800"
+          className="text-4xl md:text-5xl font-bold mb-6 text-[#1a1a1a]"
         >
-          Achievements
+          OUR ACHIEVEMENTS 🏆
         </motion.h2>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-xl text-center text-gray-600 mb-12"
-        >
-          Celebrating Excellence in Every Victory
-        </motion.p>
+        <p className="text-lg text-muted-foreground mb-10">
+          Celebrating dedication, discipline, and excellence in every victory.
+        </p>
 
-        {/* Carousel / Scroller */}
-        <div className="relative overflow-hidden">
-          <motion.div
-            className="flex gap-6"
-            animate={{ x: [`0%`, `-50%`] }}
-            transition={{
-              repeat: Infinity,
-              duration: 30,
-              ease: "linear",
-            }}
-          >
-            {[...achievements, ...achievements].map((achievement, index) => (
-              <div
+        {/* Slider */}
+        <div className="overflow-hidden" ref={emblaRef}>
+          <div className="flex">
+            {achievements.map((item, index) => (
+              <motion.div
                 key={index}
-                className="flex-shrink-0 w-72 sm:w-80 h-96 rounded-2xl overflow-hidden shadow-lg relative group"
+                className="flex-[0_0_80%] sm:flex-[0_0_45%] md:flex-[0_0_30%] px-3"
+                whileHover={{ scale: 1.05 }}
               >
-                <img
-                  src={achievement.image}
-                  alt={achievement.alt}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 flex items-end justify-center p-4">
-                  <p className="text-white font-semibold text-lg text-center">
-                    {achievement.alt}
-                  </p>
+                <div className="overflow-hidden rounded-2xl shadow-lg bg-white hover:shadow-2xl transition-all duration-300">
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    className="w-full h-64 md:h-72 object-cover"
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/img/placeholder.webp";
+                    }}
+                  />
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
-
-      {/* Bottom Tricolor Accent */}
-      <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
     </section>
   );
 };
